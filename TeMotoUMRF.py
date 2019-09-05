@@ -1,41 +1,147 @@
-from allennlp.predictors.predictor import Predictor
+from allennlp.predictors.semantic_role_labeler import SemanticRoleLabelerPredictor
+from word2number import w2n
 
 class TemotoUMRF:
     """A class that leverages the AllenNLP SRL model to build Temoto Universal Meaning Representation Format (tUMRF) objects"""
-    def __init__(self, openIE_model_path):
+    def __init__(self, srl_model_path):
         self.ros_topic_name = ""
-        self.openIE_model_path = openIE_model_path
-        self.openIE_model = Predictor.from_path(self.openIE_model_path)
+        self.srl_model_path = srl_model_path
+        self.srl_model = SemanticRoleLabelerPredictor.from_path(self.srl_model_path)
+        self.is_dir_left = False
 
     def predict_descriptors(self, input_sentence):
-        desc = self.openIE_model.predict(input_sentence)
+        # Hack below because left is not recognized as a direction
+        # in allennlp, but right is :)
+        sentence_tokens = input_sentence.split()
+        if 'left' in input_sentence:
+            # print('left detected')
+            self.is_dir_left = True
+            input_sentence = input_sentence.replace('left', 'right')
+            # print(input_sentence)
+        desc = self.srl_model.predict(input_sentence)
         return desc 
 
+    def find_arg_extent(self, tags):
+        arg_extent = []
+        for i in range(len(tags)):
+            if "ARGM-EXT" in tags[i]:
+                arg_extent.append(i)
+        # print(arg_extent)
+        return arg_extent
+
+    def find_arg_direction(self, tags):
+        arg_dir = []
+        for i in range(len(tags)):
+            if "ARGM-DIR" in tags[i]:
+                arg_dir.append(i)
+        # print(arg_dir)
+        return arg_dir
+    
+    def find_arg_mnr(self, tags):
+        arg_mnr = []
+        for i in range(len(tags)):
+            if "ARGM-MNR" in tags[i]:
+                arg_mnr.append(i)
+        # print(arg_mnr)
+        return arg_mnr
+
     def create_tumrf(self, verb, word_list):
-        print(verb)
+        # print(verb)
         tags = verb["tags"]
-        # if we cared about agents/causers we would parse for-ARG0 too
-        # see English Propbank annotation guidelines for descriptions of all tags
-        arg1s = [tags.index(i) for i in tags if "ARG1" in i] # only reports objects of transitive verbs
-        verb = [tags.index(i) for i in tags if "-V" in i]
+        # print(tags)
+        verb_token = verb["verb"]
+        # print(verb)
+        # desc = verb["description"]
+        # print(desc)
+        arg_extent = self.find_arg_extent(tags)
+        arg_direction = self.find_arg_direction(tags)
+        arg_manner = self.find_arg_mnr(tags)  
 
-        arg0s = [tags.index(i) for i in tags if "ARG0" in i]
-        # print(arg0s) 
-        # arg0 is usually the agent that is causing change in the world; however, for the "move"
-        # action, turn, rotate, and left were issues within our known vocabulary. This catch is for those cases.
-        if arg0s and word_list[arg0s[0]] == "turn" or arg0s and word_list[arg0s[0]] == "rotate":
-                verb.append(arg0s[0])
-                verb.pop(0)
-                arg1s.append(arg0s[0]+1)
+        if verb_token:
+            verb_pvf = {'verb':{'pvf_type':'string', 'pvf_value':verb_token}}
+            # print(verb_pvf)
 
-        # TODO: insert NLTK wordnet search for synonyms to match similar words to finite action list
+        if arg_direction:
+            # create a direction pvf
+            # print("direction label")
+            # print(arg_direction)
+            
+            for i in range(len(arg_direction)):
+                direction = word_list[arg_direction[i]] 
+                # print(direction) 
+                # Hack continuation for left turns
+                if direction == 'right' and self.is_dir_left:
+                    # fill in left as direction instead of right
+                    direction = 'left'
+                    self.is_dir_left = False
+                dir_pvf = {'direction':{'pvf_type':'string', 'pvf_value':direction}}
+                # print(dir_pvf)
 
-        tumrf = {"notation": "TeMoto SFT", "action_identifier": word_list[verb[0]]}
+        if arg_extent:
+            # create num val
+            # print("extent label")
+            # print(verb)
+            is_integer = []
+            arg_extent_tokens = []
+            for i in range(len(arg_extent)):
+                arg_extent_tokens.append(word_list[arg_extent[i]])
+                try:
+                    if isinstance(w2n.word_to_num(word_list[arg_extent[i]]),int):
+                        is_integer.append(i)
+                except ValueError:
+                    pass
+            
+            if len(is_integer) == 1:
+                num_alpha = w2n.word_to_num(arg_extent_tokens[is_integer[0]])
+
+            else:
+                str_concat = ''
+                for i in range(len(is_integer)):
+                    str_concat = str_concat + ' ' + arg_extent_tokens[is_integer[i]]  
+                num_alpha = w2n.word_to_num(str_concat)
+            # print(num_alpha)
+            # TODO: Tack on unit of measurement as param
+            dis_ext_pvf = {'distance':{'pvf_type':'number', 'pvf_value':num_alpha}} 
+#
+#           TODO: CREATE MULTIWORD CLUSTERING
+#            
         
-        if arg1s:
-            tumrf.update({"input_parameters": word_list[arg1s[0]]})
- 
-        print(tumrf)
+        if arg_manner:
+            # print("manner label")
+            # print(arg_manner)
+            # print(verb)
+            is_integer = []
+            arg_manner_tokens = []
+            for i in range(len(arg_manner)):
+                arg_manner_tokens.append(word_list[arg_manner[i]])
+                try:
+                    if isinstance(w2n.word_to_num(word_list[arg_manner[i]]),int):
+                        is_integer.append(i)
+                except ValueError:
+                    pass
+            
+            if len(is_integer) == 1:
+                num_alpha = w2n.word_to_num(arg_manner_tokens[is_integer[0]])
+
+            else:
+                str_concat = ''
+                for i in range(len(is_integer)):
+                    str_concat = str_concat + ' ' + arg_manner_tokens[is_integer[i]]  
+                num_alpha = w2n.word_to_num(str_concat)
+            # print(num_alpha)
+            # TODO: Tack on unit of measurement as param
+            dis_mnr_pvf = {'distance':{'pvf_type':'number', 'pvf_value':num_alpha}} 
+            # create num val
+        
+        input_param_f = {} 
+        if verb_token:
+            print(verb_pvf)
+        if arg_direction:
+            print(dir_pvf)
+        if arg_extent:
+            print(dis_ext_pvf)
+        if arg_manner:
+            print(dis_mnr_pvf)
 
     def create_tumrfs(self, desc):
         # 1) parse the incoming tagged words
