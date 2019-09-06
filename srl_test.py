@@ -1,5 +1,8 @@
+#!/usr/bin/python3
 from TeMotoUMRF import TemotoUMRF
 from allennlp.predictors.semantic_role_labeler import SemanticRoleLabelerPredictor
+import rospy
+from std_msgs.msg import String
 
 #openIE_model_path = "https://s3-us-west-2.amazonaws.com/allennlp/models/openie-model.2018-08-20.tar.gz"
 #print("Loading AllenNLP SRL Model into memory")
@@ -30,26 +33,71 @@ from allennlp.predictors.semantic_role_labeler import SemanticRoleLabelerPredict
 #desc = tUMRF.predict_descriptors("follow me at 5 meters per second")
 #desc = tUMRF.predict_descriptors("find the cup and pick it up.")
 
+#TODO: 1) Have a listener function for incoming strings
+#      2) Probably have de-noising strats to allennlp doesn't have a goddamn stroke
 
-srl_model_path = "~/Downloads/bert-base-srl-2019.06.17.tar.gz"
-tUMRF = TemotoUMRF(srl_model_path)
-desc = tUMRF.predict_descriptors("henry drive forward")
-tUMRF.create_tumrfs(desc)
-desc = tUMRF.predict_descriptors("henry drive ahead")
-tUMRF.create_tumrfs(desc)
-desc = tUMRF.predict_descriptors("henry drive backward")
-tUMRF.create_tumrfs(desc)
-desc = tUMRF.predict_descriptors("henry move forward ten meters")
-tUMRF.create_tumrfs(desc)
-desc = tUMRF.predict_descriptors("henry move backward five meters")
-tUMRF.create_tumrfs(desc)
-desc = tUMRF.predict_descriptors("henry turn left twenty five degrees")
-tUMRF.create_tumrfs(desc)
-desc = tUMRF.predict_descriptors("henry turn right twenty five degrees")
-tUMRF.create_tumrfs(desc)
-desc = tUMRF.predict_descriptors("henry rotate left twenty five degrees")
-tUMRF.create_tumrfs(desc)
-desc = tUMRF.predict_descriptors("henry rotate right twenty five degrees")
-tUMRF.create_tumrfs(desc)
-desc = tUMRF.predict_descriptors("stop")
-tUMRF.create_tumrfs(desc)
+def talker():
+    pub = rospy.Publisher('tumrf_json', String, queue_size=10)
+    rospy.init_node('talker', anonymous=True)
+    rate = rospy.Rate(10)
+
+    print('starting test execution')
+    srl_model_path = "~/Downloads/bert-base-srl-2019.06.17.tar.gz"
+    tUMRF = TemotoUMRF(srl_model_path)
+
+    while not rospy.is_shutdown():
+        desc = tUMRF.predict_descriptors("henry drive forward")
+        tumrf_jsons = tUMRF.create_tumrfs(desc)
+        pub.publish(tumrf_jsons[0])
+        print(tumrf_jsons[0])
+
+        desc = tUMRF.predict_descriptors("henry drive ahead")
+        tumrf_jsons = tUMRF.create_tumrfs(desc)
+        pub.publish(tumrf_jsons[0])
+        print(tumrf_jsons[0])
+        
+        desc = tUMRF.predict_descriptors("henry drive backward")
+        tumrf_jsons = tUMRF.create_tumrfs(desc)
+        pub.publish(tumrf_jsons[0])
+        print(tumrf_jsons[0])
+        
+        desc = tUMRF.predict_descriptors("henry move forward ten meters")
+        tumrf_jsons = tUMRF.create_tumrfs(desc)
+        pub.publish(tumrf_jsons[0])
+        print(tumrf_jsons[0])
+        
+        desc = tUMRF.predict_descriptors("henry move backward five meters")
+        tumrf_jsons = tUMRF.create_tumrfs(desc)
+        pub.publish(tumrf_jsons[0])
+        print(tumrf_jsons[0])
+        
+        desc = tUMRF.predict_descriptors("henry turn left twenty five degrees")
+        tumrf_jsons = tUMRF.create_tumrfs(desc)
+        pub.publish(tumrf_jsons[0])
+        print(tumrf_jsons[0])
+        
+        desc = tUMRF.predict_descriptors("henry turn right twenty five degrees")
+        tumrf_jsons = tUMRF.create_tumrfs(desc)
+        pub.publish(tumrf_jsons[0])
+        print(tumrf_jsons[0])
+        
+        desc = tUMRF.predict_descriptors("henry rotate left twenty five degrees")
+        tumrf_jsons = tUMRF.create_tumrfs(desc)
+        pub.publish(tumrf_jsons[0])
+        print(tumrf_jsons[0])
+        
+        desc = tUMRF.predict_descriptors("henry rotate right twenty five degrees")
+        tumrf_jsons = tUMRF.create_tumrfs(desc)
+        pub.publish(tumrf_jsons[0])
+        print(tumrf_jsons[0])
+        
+        desc = tUMRF.predict_descriptors("stop")
+        tumrf_jsons = tUMRF.create_tumrfs(desc)
+        pub.publish(tumrf_jsons[0])
+        print(tumrf_jsons[0])
+
+if __name__ == '__main__':
+    try:
+        talker()
+    except rospy.ROSInterruptException:
+        pass

@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+import json
 from allennlp.predictors.semantic_role_labeler import SemanticRoleLabelerPredictor
 from word2number import w2n
 
@@ -46,6 +48,7 @@ class TemotoUMRF:
         return arg_mnr
 
     def create_tumrf(self, verb, word_list):
+        # TODO: Make this damn function less loooooong
         # print(verb)
         tags = verb["tags"]
         # print(tags)
@@ -147,7 +150,9 @@ class TemotoUMRF:
             input_param_f.update(dis_mnr_pvf)
             # print(dis_mnr_pvf)
         temoto_umrf = {'effect':'synchronous', 'input_parameters':input_param_f}
-        print(temoto_umrf)
+        tumrf_json = json.dumps(temoto_umrf)
+        print(tumrf_json)
+        return tumrf_json
 
     def create_tumrfs(self, desc):
         # 1) parse the incoming tagged words
@@ -158,5 +163,7 @@ class TemotoUMRF:
         #    iv) effect - does action terminate after main execution is finished
         #    v) parents
         #    vi) children
+        tumrf_jsons = []
         for verb in desc["verbs"]:
-            self.create_tumrf(verb, desc["words"])
+            tumrf_jsons.append(self.create_tumrf(verb, desc["words"]))
+        return tumrf_jsons
