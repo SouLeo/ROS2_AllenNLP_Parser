@@ -1,5 +1,4 @@
-#!/usr/bin/python3
-from TeMotoUMRF import TemotoUMRF
+from temoto_parser import TeMotoUMRF
 from allennlp.predictors.semantic_role_labeler import SemanticRoleLabelerPredictor
 
 from time import sleep

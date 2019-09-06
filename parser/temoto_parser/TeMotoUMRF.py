@@ -1,125 +1,169 @@
-#!/usr/bin/python3
-from TeMotoUMRF import TemotoUMRF
+import json
+
 from allennlp.predictors.semantic_role_labeler import SemanticRoleLabelerPredictor
+from word2number import w2n
 
-from time import sleep
-import rclpy
-from std_msgs.msg import String
-#openIE_model_path = "https://s3-us-west-2.amazonaws.com/allennlp/models/openie-model.2018-08-20.tar.gz"
-#print("Loading AllenNLP SRL Model into memory")
-#predictor = SemanticRoleLabelerPredictor.from_path("~/Downloads/bert-base-srl-2019.06.17.tar.gz")
-#print("Loaded AllenNLP SRL Model")
-#ex1 = predictor.predict(sentence="please move that table")
-#ex2 = predictor.predict(sentence="follow me turtlebot")
-#ex3 = predictor.predict(sentence="speed up by 2")
-#ex4 = predictor.predict(sentence="open the door and display the hand on the screen")
-#ex5 = predictor.predict(sentence="open the rviz program and display the hand on the screen")
-# Let's mess with example 1
+class TemotoUMRF:
+    """A class that leverages the AllenNLP SRL model to build Temoto Universal Meaning Representation Format (tUMRF) objects"""
+    def __init__(self, srl_model_path):
+        self.ros_topic_name = ""
+        self.srl_model_path = srl_model_path
+        self.srl_model = SemanticRoleLabelerPredictor.from_path(self.srl_model_path)
+        self.is_dir_left = False
 
-# 1) for each example, iterate through the "verbs" keyword: ex1["verbs"][i]
-# 2) create a string match for ARG descriptor and associated word 
-# 3) create a class/dict for tUMRF to be filled with verb and descriptors
-# 4) convert python class/dict to JSON format
-# 5) create the ROS2.0 package then add the JSON string publisher (to communicate with ROS1)
-#print(ex1["verbs"][0]["verb"])
-#print(ex1["verbs"][0]["description"])
+    def predict_descriptors(self, input_sentence):
+        # Hack below because left is not recognized as a direction
+        # in allennlp, but right is :)
+        sentence_tokens = input_sentence.split()
+        if 'left' in input_sentence:
+            # print('left detected')
+            self.is_dir_left = True
+            input_sentence = input_sentence.replace('left', 'right')
+            # print(input_sentence)
+        desc = self.srl_model.predict(input_sentence)
+        return desc 
 
-# Create a tUMRF builder class
-# 1) Load the SRL model into class as param & ROSTOPIC (ROS2)
-# 2) Have member function that creates tUMRF dict
-# 3) Have member function that fills tUMRF dict (pass in public dialogue/string)
-# 4) Have member function that converts tUMRF dict -> JSON
-# 5) Have member var that publishes JSON to ROSTOPIC (ROS2)
-#desc = tUMRF.predict_descriptors("move backwards and then turn ninety degrees clockwise")
-#desc = tUMRF.predict_descriptors("follow me at 5 meters per second")
-#desc = tUMRF.predict_descriptors("find the cup and pick it up.")
+    def find_arg_extent(self, tags):
+        arg_extent = []
+        for i in range(len(tags)):
+            if "ARGM-EXT" in tags[i]:
+                arg_extent.append(i)
+        # print(arg_extent)
+        return arg_extent
 
-#TODO: 1) Have a listener function for incoming strings
-#      2) Probably have de-noising strats to allennlp doesn't have a goddamn stroke
-
-def main(args=None):
-    rclpy.init(args=args)
-    node = rclpy.create_node('minimal_publisher')
-    pub = node.create_publisher(String, 'talker', 10)
-    msg = String()
-
-    print('starting test execution')
-    srl_model_path = "~/Downloads/bert-base-srl-2019.06.17.tar.gz"
-    tUMRF = TemotoUMRF(srl_model_path)
-
-    while rclpy.ok():
-        desc = tUMRF.predict_descriptors("henry drive forward")
-        tumrf_jsons = tUMRF.create_tumrfs(desc)
-        msg.data = tumrf_jsons[0]
-        pub.publish(msg.data)
-        sleep(0.5)
-        print(tumrf_jsons[0])
-
-        desc = tUMRF.predict_descriptors("henry drive ahead")
-        tumrf_jsons = tUMRF.create_tumrfs(desc)
-        msg.data = tumrf_jsons[0]
-        pub.publish(msg.data)
-        sleep(0.5)
-        print(tumrf_jsons[0])
-        
-        desc = tUMRF.predict_descriptors("henry drive backward")
-        tumrf_jsons = tUMRF.create_tumrfs(desc)
-        msg.data = tumrf_jsons[0]
-        pub.publish(msg.data)
-        sleep(0.5)
-        print(tumrf_jsons[0])
-        
-        desc = tUMRF.predict_descriptors("henry move forward ten meters")
-        tumrf_jsons = tUMRF.create_tumrfs(desc)
-        msg.data = tumrf_jsons[0]
-        pub.publish(msg.data)
-        sleep(0.5)
-        print(tumrf_jsons[0])
-        
-        desc = tUMRF.predict_descriptors("henry move backward five meters")
-        tumrf_jsons = tUMRF.create_tumrfs(desc)
-        msg.data = tumrf_jsons[0]
-        pub.publish(msg.data)
-        sleep(0.5)
-        print(tumrf_jsons[0])
-        
-        desc = tUMRF.predict_descriptors("henry turn left twenty five degrees")
-        tumrf_jsons = tUMRF.create_tumrfs(desc)
-        msg.data = tumrf_jsons[0]
-        pub.publish(msg.data)
-        sleep(0.5)
-        print(tumrf_jsons[0])
-        
-        desc = tUMRF.predict_descriptors("henry turn right twenty five degrees")
-        tumrf_jsons = tUMRF.create_tumrfs(desc)
-        msg.data = tumrf_jsons[0]
-        pub.publish(msg.data)
-        sleep(0.5)
-        print(tumrf_jsons[0])
-        
-        desc = tUMRF.predict_descriptors("henry rotate left twenty five degrees")
-        tumrf_jsons = tUMRF.create_tumrfs(desc)
-        msg.data = tumrf_jsons[0]
-        pub.publish(msg.data)
-        sleep(0.5)
-        print(tumrf_jsons[0])
-        
-        desc = tUMRF.predict_descriptors("henry rotate right twenty five degrees")
-        tumrf_jsons = tUMRF.create_tumrfs(desc)
-        msg.data = tumrf_jsons[0]
-        pub.publish(msg.data)
-        sleep(0.5)
-        print(tumrf_jsons[0])
-        
-        desc = tUMRF.predict_descriptors("stop")
-        tumrf_jsons = tUMRF.create_tumrfs(desc)
-        msg.data = tumrf_jsons[0]
-        pub.publish(msg.data)
-        sleep(0.5)
-        print(tumrf_jsons[0])
+    def find_arg_direction(self, tags):
+        arg_dir = []
+        for i in range(len(tags)):
+            if "ARGM-DIR" in tags[i]:
+                arg_dir.append(i)
+        # print(arg_dir)
+        return arg_dir
     
-    node.destoy_node()
-    rclpy.shutdown()
+    def find_arg_mnr(self, tags):
+        arg_mnr = []
+        for i in range(len(tags)):
+            if "ARGM-MNR" in tags[i]:
+                arg_mnr.append(i)
+        # print(arg_mnr)
+        return arg_mnr
 
-if __name__ == '__main__':
-    main()
+    def create_tumrf(self, verb, word_list):
+        # TODO: Make this damn function less loooooong
+        # print(verb)
+        tags = verb["tags"]
+        # print(tags)
+        verb_token = verb["verb"]
+        # print(verb)
+        # desc = verb["description"]
+        # print(desc)
+        arg_extent = self.find_arg_extent(tags)
+        arg_direction = self.find_arg_direction(tags)
+        arg_manner = self.find_arg_mnr(tags)  
+
+        if verb_token:
+            verb_pvf = {'verb':{'pvf_type':'string', 'pvf_value':verb_token}}
+            # print(verb_pvf)
+
+        if arg_direction:
+            # create a direction pvf
+            # print("direction label")
+            # print(arg_direction)
+            
+            for i in range(len(arg_direction)):
+                direction = word_list[arg_direction[i]] 
+                # print(direction) 
+                # Hack continuation for left turns
+                if direction == 'right' and self.is_dir_left:
+                    # fill in left as direction instead of right
+                    direction = 'left'
+                    self.is_dir_left = False
+                dir_pvf = {'direction':{'pvf_type':'string', 'pvf_value':direction}}
+                # print(dir_pvf)
+
+        if arg_extent:
+            # create num val
+            # print("extent label")
+            # print(verb)
+            is_integer = []
+            arg_extent_tokens = []
+            for i in range(len(arg_extent)):
+                arg_extent_tokens.append(word_list[arg_extent[i]])
+                try:
+                    if isinstance(w2n.word_to_num(word_list[arg_extent[i]]),int):
+                        is_integer.append(i)
+                except ValueError:
+                    pass
+            
+            if len(is_integer) == 1:
+                num_alpha = w2n.word_to_num(arg_extent_tokens[is_integer[0]])
+
+            else:
+                str_concat = ''
+                for i in range(len(is_integer)):
+                    str_concat = str_concat + ' ' + arg_extent_tokens[is_integer[i]]  
+                num_alpha = w2n.word_to_num(str_concat)
+            # print(num_alpha)
+            # TODO: Tack on unit of measurement as param
+            dis_ext_pvf = {'distance':{'pvf_type':'number', 'pvf_value':num_alpha}} 
+#
+#           TODO: CREATE MULTIWORD CLUSTERING
+#            
+        
+        if arg_manner:
+            # print("manner label")
+            # print(arg_manner)
+            # print(verb)
+            is_integer = []
+            arg_manner_tokens = []
+            for i in range(len(arg_manner)):
+                arg_manner_tokens.append(word_list[arg_manner[i]])
+                try:
+                    if isinstance(w2n.word_to_num(word_list[arg_manner[i]]),int):
+                        is_integer.append(i)
+                except ValueError:
+                    pass
+            
+            if len(is_integer) == 1:
+                num_alpha = w2n.word_to_num(arg_manner_tokens[is_integer[0]])
+
+            else:
+                str_concat = ''
+                for i in range(len(is_integer)):
+                    str_concat = str_concat + ' ' + arg_manner_tokens[is_integer[i]]  
+                num_alpha = w2n.word_to_num(str_concat)
+            # print(num_alpha)
+            # TODO: Tack on unit of measurement as param
+            dis_mnr_pvf = {'distance':{'pvf_type':'number', 'pvf_value':num_alpha}} 
+            # create num val
+        
+        input_param_f = {} 
+        if verb_token:
+            input_param_f.update(verb_pvf)
+            # print(verb_pvf)
+        if arg_direction:
+            input_param_f.update(dir_pvf)
+            # print(dir_pvf)
+        if arg_extent:
+            input_param_f.update(dis_ext_pvf)
+            # print(dis_ext_pvf)
+        if arg_manner:
+            input_param_f.update(dis_mnr_pvf)
+            # print(dis_mnr_pvf)
+        temoto_umrf = {'effect':'synchronous', 'input_parameters':input_param_f}
+        tumrf_json = json.dumps(temoto_umrf)
+        print(tumrf_json)
+        return tumrf_json
+
+    def create_tumrfs(self, desc):
+        # 1) parse the incoming tagged words
+        # 2) separate into 
+        #    i) input params
+        #    ii) output params
+        #    iii) suffix - num which differentiates multiple instances of actions (?)
+        #    iv) effect - does action terminate after main execution is finished
+        #    v) parents
+        #    vi) children
+        tumrf_jsons = []
+        for verb in desc["verbs"]:
+            tumrf_jsons.append(self.create_tumrf(verb, desc["words"]))
+        return tumrf_jsons

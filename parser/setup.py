@@ -8,6 +8,11 @@ setup(
     packages=[package_name],
     install_requires=['setuptools'],
     zip_safe=True,
+    data_files=[
+        ('share/ament_index/resource_index/packages',
+            ['resource/' + package_name]),
+        ('share/' + package_name, ['package.xml']),
+    ],
     author='Mikael Arguedas',
     author_email='mikael@osrfoundation.org',
     maintainer='Mikael Arguedas',
