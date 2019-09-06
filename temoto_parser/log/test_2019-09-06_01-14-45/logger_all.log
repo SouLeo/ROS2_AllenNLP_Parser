@@ -1,0 +1,50 @@
+[0.107s] DEBUG:colcon:Command line arguments: ['/usr/bin/colcon', 'test']
+[0.107s] DEBUG:colcon:Parsed command line arguments: Namespace(abort_on_error=False, base_paths='.', build_base='build', ctest_args=None, event_handlers=None, executor='parallel', ignore_user_meta=False, install_base='install', log_base='log', log_level=None, main=<bound method TestVerb.main of <colcon_core.verb.test.TestVerb object at 0x7f480aec1b70>>, merge_install=False, metas='./colcon.meta', packages_above=None, packages_above_depth=None, packages_end=None, packages_ignore=None, packages_ignore_regex=None, packages_select=None, packages_select_build_failed=False, packages_select_by_dep=None, packages_select_regex=None, packages_select_test_failures=False, packages_skip=None, packages_skip_build_finished=False, packages_skip_by_dep=None, packages_skip_regex=None, packages_skip_test_passed=False, packages_skip_up_to=None, packages_start=None, packages_up_to=None, parallel_workers=8, paths=None, pytest_args=None, python_testing=None, retest_until_fail=0, retest_until_pass=0, return_code_on_test_failure=False, test_result_base=None, verb_extension=<colcon_core.verb.test.TestVerb object at 0x7f480aec1b70>, verb_name='test', verb_parser=<colcon_defaults.argument_parser.defaults.DefaultArgumentsDecorator object at 0x7f480aecfb38>)
+[0.137s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) check parameters
+[0.137s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) check parameters
+[0.137s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) check parameters
+[0.137s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) check parameters
+[0.137s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) discover
+[0.137s] INFO:colcon.colcon_core.package_discovery:Crawling recursively for packages in '/home/selmawanna/ros2_ws/src/temoto_parser'
+[0.137s] Level 1:colcon.colcon_core.package_identification:_identify(/home/selmawanna/ros2_ws/src/temoto_parser) by extensions ['ignore', 'ignore_ament_install']
+[0.137s] Level 1:colcon.colcon_core.package_identification:_identify(/home/selmawanna/ros2_ws/src/temoto_parser) by extension 'ignore'
+[0.138s] Level 1:colcon.colcon_core.package_identification:_identify(/home/selmawanna/ros2_ws/src/temoto_parser) by extension 'ignore_ament_install'
+[0.138s] Level 1:colcon.colcon_core.package_identification:_identify(/home/selmawanna/ros2_ws/src/temoto_parser) by extensions ['colcon_pkg']
+[0.138s] Level 1:colcon.colcon_core.package_identification:_identify(/home/selmawanna/ros2_ws/src/temoto_parser) by extension 'colcon_pkg'
+[0.138s] Level 1:colcon.colcon_core.package_identification:_identify(/home/selmawanna/ros2_ws/src/temoto_parser) by extensions ['colcon_meta']
+[0.138s] Level 1:colcon.colcon_core.package_identification:_identify(/home/selmawanna/ros2_ws/src/temoto_parser) by extension 'colcon_meta'
+[0.138s] Level 1:colcon.colcon_core.package_identification:_identify(/home/selmawanna/ros2_ws/src/temoto_parser) by extensions ['ros']
+[0.138s] Level 1:colcon.colcon_core.package_identification:_identify(/home/selmawanna/ros2_ws/src/temoto_parser) by extension 'ros'
+[0.149s] DEBUG:colcon.colcon_core.package_identification:Package '/home/selmawanna/ros2_ws/src/temoto_parser' with type 'ros.ament_python' and name 'temoto_parser'
+[0.149s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) using defaults
+[0.153s] Level 5:colcon.colcon_core.verb:set package 'temoto_parser' test argument 'ctest_args' from command line to 'None'
+[0.153s] Level 5:colcon.colcon_core.verb:set package 'temoto_parser' test argument 'python_testing' from command line to 'None'
+[0.153s] Level 5:colcon.colcon_core.verb:set package 'temoto_parser' test argument 'pytest_args' from command line to 'None'
+[0.153s] Level 5:colcon.colcon_core.verb:set package 'temoto_parser' test argument 'retest_until_pass' from command line to '0'
+[0.153s] Level 5:colcon.colcon_core.verb:set package 'temoto_parser' test argument 'retest_until_fail' from command line to '0'
+[0.153s] DEBUG:colcon.colcon_core.verb.test:Testing package 'temoto_parser' with the following arguments: {'build_base': '/home/selmawanna/ros2_ws/src/temoto_parser/build/temoto_parser', 'ctest_args': None, 'install_base': '/home/selmawanna/ros2_ws/src/temoto_parser/install/temoto_parser', 'path': '/home/selmawanna/ros2_ws/src/temoto_parser', 'pytest_args': None, 'python_testing': None, 'retest_until_fail': 0, 'retest_until_pass': 0, 'test_result_base': None}
+[0.154s] INFO:colcon.colcon_core.executor:Executing jobs using 'parallel' executor
+[0.155s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete
+[0.155s] INFO:colcon.colcon_ros.task.ament_python.test:Testing ROS package in '/home/selmawanna/ros2_ws/src/temoto_parser' with build type'ament_python'
+[0.155s] INFO:colcon.colcon_core.task.python.test:Testing Python package in '/home/selmawanna/ros2_ws/src/temoto_parser'
+[0.157s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_core.shell.bat': Not used on non-Windows systems
+[0.158s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.158s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.160s] WARNING:colcon.colcon_core.shell:The following packages are in the workspace but haven't been built:
+- temoto_parser
+They are being used from the following locations instead:
+- /home/selmawanna/ros2_ws/install/temoto_parser
+To suppress this warning ignore these packages in the workspace:
+--packages-ignore temoto_parser
+[0.354s] Level 1:colcon.colcon_core.task.python.test:test() by extension 'pytest'
+[0.354s] Level 1:colcon.colcon_core.task.python.test:test.step() by extension 'pytest'
+[0.381s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/selmawanna/ros2_ws/src/temoto_parser': PYTEST_ADDOPTS=--tb=short --junit-xml=/home/selmawanna/ros2_ws/src/temoto_parser/build/temoto_parser/pytest.xml --junit-prefix=temoto_parser -o cache_dir=/home/selmawanna/ros2_ws/src/temoto_parser/build/temoto_parser/.pytest_cache /usr/bin/python3 setup.py pytest egg_info --egg-base /home/selmawanna/ros2_ws/src/temoto_parser/build/temoto_parser
+[0.840s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/selmawanna/ros2_ws/src/temoto_parser' returned '2': PYTEST_ADDOPTS=--tb=short --junit-xml=/home/selmawanna/ros2_ws/src/temoto_parser/build/temoto_parser/pytest.xml --junit-prefix=temoto_parser -o cache_dir=/home/selmawanna/ros2_ws/src/temoto_parser/build/temoto_parser/.pytest_cache /usr/bin/python3 setup.py pytest egg_info --egg-base /home/selmawanna/ros2_ws/src/temoto_parser/build/temoto_parser
+[0.850s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:closing loop
+[0.850s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:loop closed
+[0.850s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete finished with '2'
+[0.850s] DEBUG:colcon.colcon_core.event_reactor:joining thread
+[0.857s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.terminal_notifier': Not used on non-Darwin systems
+[0.857s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.win32': Not used on non-Windows systems
+[0.857s] INFO:colcon.colcon_notification.desktop_notification:Sending desktop notification using 'notify2'
+[0.861s] DEBUG:colcon.colcon_core.event_reactor:joined thread

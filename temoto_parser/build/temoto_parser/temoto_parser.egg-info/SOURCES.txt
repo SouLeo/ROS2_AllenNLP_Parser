@@ -1,0 +1,11 @@
+setup.cfg
+setup.py
+/home/selmawanna/ros2_ws/src/temoto_parser/build/temoto_parser/temoto_parser.egg-info/PKG-INFO
+/home/selmawanna/ros2_ws/src/temoto_parser/build/temoto_parser/temoto_parser.egg-info/SOURCES.txt
+/home/selmawanna/ros2_ws/src/temoto_parser/build/temoto_parser/temoto_parser.egg-info/dependency_links.txt
+/home/selmawanna/ros2_ws/src/temoto_parser/build/temoto_parser/temoto_parser.egg-info/entry_points.txt
+/home/selmawanna/ros2_ws/src/temoto_parser/build/temoto_parser/temoto_parser.egg-info/requires.txt
+/home/selmawanna/ros2_ws/src/temoto_parser/build/temoto_parser/temoto_parser.egg-info/top_level.txt
+/home/selmawanna/ros2_ws/src/temoto_parser/build/temoto_parser/temoto_parser.egg-info/zip-safe
+src/TeMotoUMRF.py
+src/srl_test.py
