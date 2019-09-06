@@ -4,31 +4,29 @@ package_name = 'temoto_parser'
 
 setup(
     name=package_name,
-    version='0.0.0',
-    packages=[],
-    py_modules=[
-        'src/srl_test',
-        'src/TeMotoUMRF',
-        ],
+    version='0.7.0',
+    packages=[package_name],
     install_requires=['setuptools'],
     zip_safe=True,
-    author='slwanna',
-    author_email="slwanna@utexas.edu",
-    maintainer='Selma',
-    maintainer_email="slwanna@utexas.edu",
-    keywords=['ROS','ROS2'],
+    author='Mikael Arguedas',
+    author_email='mikael@osrfoundation.org',
+    maintainer='Mikael Arguedas',
+    maintainer_email='mikael@osrfoundation.org',
+    keywords=['ROS'],
     classifiers=[
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Apache Software License',
         'Programming Language :: Python',
         'Topic :: Software Development',
     ],
-    description='TODO: Package description.',
+    description='Examples of minimal publishers using rclpy.',
     license='Apache License, Version 2.0',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'srl_test = src.srl_test:main',
+            'srl_test = temoto_parser.srl_test:main',
         ],
     },
 )
+
+

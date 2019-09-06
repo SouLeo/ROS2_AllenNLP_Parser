@@ -1,2 +1,0 @@
-src/TeMotoUMRF
-src/srl_test

@@ -1,3 +1,0 @@
-[console_scripts]
-srl_test = src.srl_test:main
-
