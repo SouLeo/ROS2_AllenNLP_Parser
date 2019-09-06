@@ -1,7 +1,7 @@
 from TeMotoUMRF import TemotoUMRF
 from allennlp.predictors.semantic_role_labeler import SemanticRoleLabelerPredictor
 
-openIE_model_path = "https://s3-us-west-2.amazonaws.com/allennlp/models/openie-model.2018-08-20.tar.gz"
+#openIE_model_path = "https://s3-us-west-2.amazonaws.com/allennlp/models/openie-model.2018-08-20.tar.gz"
 #print("Loading AllenNLP SRL Model into memory")
 #predictor = SemanticRoleLabelerPredictor.from_path("~/Downloads/bert-base-srl-2019.06.17.tar.gz")
 #print("Loaded AllenNLP SRL Model")
@@ -26,31 +26,30 @@ openIE_model_path = "https://s3-us-west-2.amazonaws.com/allennlp/models/openie-m
 # 3) Have member function that fills tUMRF dict (pass in public dialogue/string)
 # 4) Have member function that converts tUMRF dict -> JSON
 # 5) Have member var that publishes JSON to ROSTOPIC (ROS2)
-tUMRF = TemotoUMRF(openIE_model_path)
 #desc = tUMRF.predict_descriptors("move backwards and then turn ninety degrees clockwise")
 #desc = tUMRF.predict_descriptors("follow me at 5 meters per second")
 #desc = tUMRF.predict_descriptors("find the cup and pick it up.")
 
 
-desc = tUMRF.predict_descriptors("Temoto, drive forward")
+srl_model_path = "~/Downloads/bert-base-srl-2019.06.17.tar.gz"
+tUMRF = TemotoUMRF(srl_model_path)
+desc = tUMRF.predict_descriptors("henry drive forward")
 tUMRF.create_tumrfs(desc)
-desc = tUMRF.predict_descriptors("Robot, drive ahead")
+desc = tUMRF.predict_descriptors("henry drive ahead")
 tUMRF.create_tumrfs(desc)
-desc = tUMRF.predict_descriptors("Robot, go forward")
+desc = tUMRF.predict_descriptors("henry drive backward")
 tUMRF.create_tumrfs(desc)
-desc = tUMRF.predict_descriptors("go ahead")
+desc = tUMRF.predict_descriptors("henry move forward ten meters")
 tUMRF.create_tumrfs(desc)
-desc = tUMRF.predict_descriptors("move forward")
+desc = tUMRF.predict_descriptors("henry move backward five meters")
 tUMRF.create_tumrfs(desc)
-desc = tUMRF.predict_descriptors("turn left")
+desc = tUMRF.predict_descriptors("henry turn left twenty five degrees")
 tUMRF.create_tumrfs(desc)
-desc = tUMRF.predict_descriptors("rotate left")
+desc = tUMRF.predict_descriptors("henry turn right twenty five degrees")
 tUMRF.create_tumrfs(desc)
-desc = tUMRF.predict_descriptors("Robot, stop")
+desc = tUMRF.predict_descriptors("henry rotate left twenty five degrees")
 tUMRF.create_tumrfs(desc)
-desc = tUMRF.predict_descriptors("Stop")
+desc = tUMRF.predict_descriptors("henry rotate right twenty five degrees")
 tUMRF.create_tumrfs(desc)
-desc = tUMRF.predict_descriptors("Robot, stop moving")
-tUMRF.create_tumrfs(desc)
-desc = tUMRF.predict_descriptors("Stop moving")
+desc = tUMRF.predict_descriptors("stop")
 tUMRF.create_tumrfs(desc)

@@ -135,13 +135,19 @@ class TemotoUMRF:
         
         input_param_f = {} 
         if verb_token:
-            print(verb_pvf)
+            input_param_f.update(verb_pvf)
+            # print(verb_pvf)
         if arg_direction:
-            print(dir_pvf)
+            input_param_f.update(dir_pvf)
+            # print(dir_pvf)
         if arg_extent:
-            print(dis_ext_pvf)
+            input_param_f.update(dis_ext_pvf)
+            # print(dis_ext_pvf)
         if arg_manner:
-            print(dis_mnr_pvf)
+            input_param_f.update(dis_mnr_pvf)
+            # print(dis_mnr_pvf)
+        temoto_umrf = {'effect':'synchronous', 'input_parameters':input_param_f}
+        print(temoto_umrf)
 
     def create_tumrfs(self, desc):
         # 1) parse the incoming tagged words
