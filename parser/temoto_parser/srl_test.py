@@ -1,4 +1,4 @@
-from temoto_parser import TeMotoUMRF
+from temoto_parser.TeMotoUMRF import TemotoUMRF 
 from allennlp.predictors.semantic_role_labeler import SemanticRoleLabelerPredictor
 
 from time import sleep
@@ -45,75 +45,76 @@ def main(args=None):
     print('starting test execution')
     srl_model_path = "~/Downloads/bert-base-srl-2019.06.17.tar.gz"
     tUMRF = TemotoUMRF(srl_model_path)
+    print('the following ros2 msgs will be published to the topic /talker')
 
     while rclpy.ok():
         desc = tUMRF.predict_descriptors("henry drive forward")
         tumrf_jsons = tUMRF.create_tumrfs(desc)
-        msg.data = tumrf_jsons[0]
-        pub.publish(msg.data)
+        msg.data = str(tumrf_jsons[0])
+        pub.publish(msg)
         sleep(0.5)
         print(tumrf_jsons[0])
 
         desc = tUMRF.predict_descriptors("henry drive ahead")
         tumrf_jsons = tUMRF.create_tumrfs(desc)
         msg.data = tumrf_jsons[0]
-        pub.publish(msg.data)
+        pub.publish(msg)
         sleep(0.5)
         print(tumrf_jsons[0])
         
         desc = tUMRF.predict_descriptors("henry drive backward")
         tumrf_jsons = tUMRF.create_tumrfs(desc)
         msg.data = tumrf_jsons[0]
-        pub.publish(msg.data)
+        pub.publish(msg)
         sleep(0.5)
         print(tumrf_jsons[0])
         
         desc = tUMRF.predict_descriptors("henry move forward ten meters")
         tumrf_jsons = tUMRF.create_tumrfs(desc)
         msg.data = tumrf_jsons[0]
-        pub.publish(msg.data)
+        pub.publish(msg)
         sleep(0.5)
         print(tumrf_jsons[0])
         
         desc = tUMRF.predict_descriptors("henry move backward five meters")
         tumrf_jsons = tUMRF.create_tumrfs(desc)
         msg.data = tumrf_jsons[0]
-        pub.publish(msg.data)
+        pub.publish(msg)
         sleep(0.5)
         print(tumrf_jsons[0])
         
         desc = tUMRF.predict_descriptors("henry turn left twenty five degrees")
         tumrf_jsons = tUMRF.create_tumrfs(desc)
         msg.data = tumrf_jsons[0]
-        pub.publish(msg.data)
+        pub.publish(msg)
         sleep(0.5)
         print(tumrf_jsons[0])
         
         desc = tUMRF.predict_descriptors("henry turn right twenty five degrees")
         tumrf_jsons = tUMRF.create_tumrfs(desc)
         msg.data = tumrf_jsons[0]
-        pub.publish(msg.data)
+        pub.publish(msg)
         sleep(0.5)
         print(tumrf_jsons[0])
         
         desc = tUMRF.predict_descriptors("henry rotate left twenty five degrees")
         tumrf_jsons = tUMRF.create_tumrfs(desc)
         msg.data = tumrf_jsons[0]
-        pub.publish(msg.data)
+        pub.publish(msg)
         sleep(0.5)
         print(tumrf_jsons[0])
         
         desc = tUMRF.predict_descriptors("henry rotate right twenty five degrees")
         tumrf_jsons = tUMRF.create_tumrfs(desc)
         msg.data = tumrf_jsons[0]
-        pub.publish(msg.data)
+        pub.publish(msg)
         sleep(0.5)
         print(tumrf_jsons[0])
         
         desc = tUMRF.predict_descriptors("stop")
         tumrf_jsons = tUMRF.create_tumrfs(desc)
         msg.data = tumrf_jsons[0]
-        pub.publish(msg.data)
+        pub.publish(msg)
         sleep(0.5)
         print(tumrf_jsons[0])
     

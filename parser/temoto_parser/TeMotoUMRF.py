@@ -1,5 +1,4 @@
 import json
-
 from allennlp.predictors.semantic_role_labeler import SemanticRoleLabelerPredictor
 from word2number import w2n
 
@@ -151,7 +150,7 @@ class TemotoUMRF:
             # print(dis_mnr_pvf)
         temoto_umrf = {'effect':'synchronous', 'input_parameters':input_param_f}
         tumrf_json = json.dumps(temoto_umrf)
-        print(tumrf_json)
+        # print(tumrf_json)
         return tumrf_json
 
     def create_tumrfs(self, desc):
