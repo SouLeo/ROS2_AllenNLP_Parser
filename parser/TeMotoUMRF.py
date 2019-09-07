@@ -45,7 +45,23 @@ class TemotoUMRF:
                 arg_mnr.append(i)
         # print(arg_mnr)
         return arg_mnr
+    
+    def find_arg_dis(self, tags):
+        arg_dis = []
+        for i in range(len(tags)):
+            if "ARGM-DIS" in tags[i]:
+                arg_dis.append(i)
+        # print(arg_mnr)
+        return arg_dis
 
+    def find_arg_agent0(self, tags):
+        arg_agent0 = []
+        for i in range(len(tags)):
+            if "ARG0" in tags[i]:
+                arg_agent0.append(i)
+        # print(arg_mnr)
+        return arg_agent0
+    
     def create_tumrf(self, verb, word_list):
         # TODO: Make this damn function less loooooong
         # print(verb)
@@ -58,6 +74,10 @@ class TemotoUMRF:
         arg_extent = self.find_arg_extent(tags)
         arg_direction = self.find_arg_direction(tags)
         arg_manner = self.find_arg_mnr(tags)  
+        # wake word detection:
+        arg_dis = self.find_arg_dis(tags)  
+        arg_agent0 = self.find_arg_agent0(tags)  
+            
 
         if verb_token:
             verb_pvf = {'verb':{'pvf_type':'string', 'pvf_value':verb_token}}
@@ -134,6 +154,14 @@ class TemotoUMRF:
             # TODO: Tack on unit of measurement as param
             dis_mnr_pvf = {'distance':{'pvf_type':'number', 'pvf_value':num_alpha}} 
             # create num val
+
+        if arg_dis:
+            wake_word = word_list[arg_dis[0]] 
+            wake_param = {'wakeword':wake_word}
+        
+        if arg_agent0:
+            wake_word = word_list[arg_agent[0]]
+            wake_param = {'wakeword':wake_word}
         
         input_param_f = {} 
         if verb_token:
@@ -148,6 +176,10 @@ class TemotoUMRF:
         if arg_manner:
             input_param_f.update(dis_mnr_pvf)
             # print(dis_mnr_pvf)
+        if arg_dis:
+            input_param_f.update(wake_param)
+        if arg_agent0:
+            input_param_f.update(wake_param)
         temoto_umrf = {'effect':'synchronous', 'input_parameters':input_param_f}
         tumrf_json = json.dumps(temoto_umrf)
         # print(tumrf_json)
