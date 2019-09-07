@@ -176,11 +176,11 @@ class TemotoUMRF:
         if arg_manner:
             input_param_f.update(dis_mnr_pvf)
             # print(dis_mnr_pvf)
-        if arg_dis:
-            input_param_f.update(wake_param)
-        if arg_agent0:
-            input_param_f.update(wake_param)
         temoto_umrf = {'effect':'synchronous', 'input_parameters':input_param_f}
+        if arg_dis:
+            temoto_umrf.update(wake_param)
+        if arg_agent0:
+            temoto_umrf.update(wake_param)
         tumrf_json = json.dumps(temoto_umrf)
         # print(tumrf_json)
         return tumrf_json
