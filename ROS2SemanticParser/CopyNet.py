@@ -10,6 +10,16 @@ from allennlp.modules.text_field_embedders.basic_text_field_embedder import Basi
 from allennlp_models.generation.dataset_readers.copynet_seq2seq import CopyNetDatasetReader
 
 
+def predict_continuous(nl_input):
+    # predictor = Seq2SeqPredictor(self.semantic_parser, self.dataset_reader)
+    archive = load_archive("C:/Users/Selma/PycharmProjects/ROS2SemanticParser/"
+                                                 "CN_model_weights/no_embedds/model.tar.gz")
+    predictor = Seq2SeqPredictor.from_archive(archive)
+    output = predictor.predict(nl_input)
+    sent_list = output['predicted_tokens'][0]
+    return sent_list
+
+
 class SemanticParser:
     def __init__(self):
         # CopyNet model initialization parameters
@@ -45,11 +55,3 @@ class SemanticParser:
     def predict_from_file(self):
         raise NotImplemented
         # prediction from tsv file
-
-    def predict_continuous(self, nl_input):
-        # predictor = Seq2SeqPredictor(self.semantic_parser, self.dataset_reader)
-        archive = load_archive("C:/Users/Selma/PycharmProjects/ROS2SemanticParser/"
-                                                     "CN_model_weights/no_embedds/model.tar.gz")
-        predictor = Seq2SeqPredictor.from_archive(archive)
-        output = predictor.predict(nl_input)
-        print(output['predicted_tokens'][0])
