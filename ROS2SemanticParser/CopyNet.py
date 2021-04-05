@@ -12,7 +12,7 @@ from allennlp_models.generation.dataset_readers.copynet_seq2seq import CopyNetDa
 
 def predict_continuous(nl_input):
     # predictor = Seq2SeqPredictor(self.semantic_parser, self.dataset_reader)
-    archive = load_archive("C:/Users/Selma/PycharmProjects/ROS2SemanticParser/"
+    archive = load_archive("/home/ubuntu/ROS2_AllenNLP_Parser/ROS2SemanticParser/"
                                                  "CN_model_weights/no_embedds/model.tar.gz")
     predictor = Seq2SeqPredictor.from_archive(archive)
     output = predictor.predict(nl_input)
@@ -43,7 +43,7 @@ class SemanticParser:
 
     def load_existing_model(self):
         # load previously trained model weights
-        with open("C:/Users/Selma/PycharmProjects/ROS2SemanticParser/CN_model_weights/no_embedds/"
+        with open("/home/ubuntu/ROS2_AllenNLP_Parser/ROS2SemanticParser/CN_model_weights/no_embedds/"
                   "best.th",
                   'rb') as f:
             self.semantic_parser.load_state_dict(torch.load(f))
